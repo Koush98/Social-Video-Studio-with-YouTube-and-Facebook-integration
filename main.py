@@ -35,10 +35,19 @@ app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], all
 def serve_index():
     return FileResponse("index.html")
 
-# Replace with your actual credentials from Google Cloud Console
+# Google OAuth Configuration
 CLIENT_SECRETS_FILE = "client_secrets.json"
+
+# For production: Load from environment variable if file doesn't exist
+GOOGLE_CLIENT_SECRETS_JSON = os.getenv("GOOGLE_CLIENT_SECRETS_JSON", "")
+
 user_creds = {}  # Stores YouTube credentials
 fb_creds = {}    # Stores Facebook credentials
+
+# Create client_secrets.json from environment variable if provided
+if GOOGLE_CLIENT_SECRETS_JSON and not os.path.exists(CLIENT_SECRETS_FILE):
+    with open(CLIENT_SECRETS_FILE, 'w') as f:
+        f.write(GOOGLE_CLIENT_SECRETS_JSON)
 
 async def save_temp_file(file: UploadFile):
     """Save uploaded file temporarily"""
