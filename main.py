@@ -46,8 +46,18 @@ fb_creds = {}    # Stores Facebook credentials
 
 # Create client_secrets.json from environment variable if provided
 if GOOGLE_CLIENT_SECRETS_JSON and not os.path.exists(CLIENT_SECRETS_FILE):
-    with open(CLIENT_SECRETS_FILE, 'w') as f:
-        f.write(GOOGLE_CLIENT_SECRETS_JSON)
+    try:
+        with open(CLIENT_SECRETS_FILE, 'w') as f:
+            f.write(GOOGLE_CLIENT_SECRETS_JSON)
+        print(f"Created {CLIENT_SECRETS_FILE} from environment variable")
+    except Exception as e:
+        print(f"Error creating {CLIENT_SECRETS_FILE}: {e}")
+
+# Check if file exists
+if os.path.exists(CLIENT_SECRETS_FILE):
+    print(f"{CLIENT_SECRETS_FILE} exists")
+else:
+    print(f"WARNING: {CLIENT_SECRETS_FILE} not found. YouTube OAuth will not work.")
 
 async def save_temp_file(file: UploadFile):
     """Save uploaded file temporarily"""
@@ -224,6 +234,19 @@ async def upload_facebook(
 
 @app.get("/login")
 def login(request: Request):
+    # Check if client_secrets.json exists
+    if not os.path.exists(CLIENT_SECRETS_FILE):
+        return {
+            "error": "Google OAuth not configured",
+            "message": f"{CLIENT_SECRETS_FILE} not found. Please set GOOGLE_CLIENT_SECRETS_JSON environment variable.",
+            "instructions": [
+                "1. Go to https://console.cloud.google.com/",
+                "2. Create OAuth 2.0 credentials",
+                "3. Download client_secrets.json",
+                "4. Copy its contents and paste as GOOGLE_CLIENT_SECRETS_JSON in Render environment variables"
+            ]
+        }
+    
     flow = Flow.from_client_secrets_file(
         CLIENT_SECRETS_FILE,
         scopes=["https://www.googleapis.com/auth/youtube.upload"],
