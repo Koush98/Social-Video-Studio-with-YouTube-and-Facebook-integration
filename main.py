@@ -276,7 +276,7 @@ def callback(request: Request, code: str, state: str):
     flow = Flow.from_client_secrets_file(
         CLIENT_SECRETS_FILE,
         scopes=["https://www.googleapis.com/auth/youtube.upload"],
-        redirect_uri="http://localhost:8000/callback",
+        redirect_uri=f"{APP_URL}/callback",
         state=state
     )
     # Restore the code_verifier
