@@ -190,7 +190,7 @@ def fb_callback(request: Request, code: str, state: str):
     }
     
     # Auto-redirect back to main app
-    return RedirectResponse("http://localhost:8000/?auth=success&platform=facebook")
+    return RedirectResponse(f"{APP_URL}/?auth=success&platform=facebook")
 
 @app.post("/upload/facebook")
 async def upload_facebook(
@@ -218,7 +218,7 @@ def login(request: Request):
     flow = Flow.from_client_secrets_file(
         CLIENT_SECRETS_FILE,
         scopes=["https://www.googleapis.com/auth/youtube.upload"],
-        redirect_uri="http://localhost:8000/callback"
+        redirect_uri=f"{APP_URL}/callback"
     )
     auth_url, state = flow.authorization_url(
         prompt="consent",
@@ -249,7 +249,7 @@ def callback(request: Request, code: str, state: str):
     flow.fetch_token(code=code)
     user_creds['auth'] = flow.credentials
     # Auto-redirect back to main app
-    return RedirectResponse("http://localhost:8000/?auth=success&platform=youtube")
+    return RedirectResponse(f"{APP_URL}/?auth=success&platform=youtube")
 
 if __name__ == "__main__":
     import uvicorn
