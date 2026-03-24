@@ -262,7 +262,7 @@
                 </div>
             </div>
             <div id="authButtons">
-                <a href="http://localhost:8000/login"><button class="btn btn-youtube"><i class="fab fa-youtube"></i> Connect YouTube</button></a>
+                <a href="/login"><button class="btn btn-youtube"><i class="fab fa-youtube"></i> Connect YouTube</button></a>
             </div>
         </div>
 
@@ -450,10 +450,10 @@
             const authDiv = document.getElementById('authButtons');
             let html = '';
             if (platforms.youtube) {
-                html += '<a href="http://localhost:8000/login"><button class="btn btn-youtube" style="margin-right: 10px;"><i class="fab fa-youtube"></i> Connect YouTube</button></a>';
+                html += '<a href="/login"><button class="btn btn-youtube" style="margin-right: 10px;"><i class="fab fa-youtube"></i> Connect YouTube</button></a>';
             }
             if (platforms.facebook) {
-                html += '<a href="http://localhost:8000/fb-login"><button class="btn btn-facebook"><i class="fab fa-facebook"></i> Connect Facebook</button></a>';
+                html += '<a href="/fb-login"><button class="btn btn-facebook"><i class="fab fa-facebook"></i> Connect Facebook</button></a>';
             }
             authDiv.innerHTML = html;
         }
@@ -554,7 +554,7 @@
                 formData.append('platform', JSON.stringify(platform));
                 
                 try {
-                    const response = await fetch(`http://localhost:8000/upload/${platform.name}`, {
+                    const response = await fetch(`/upload/${platform.name}`, {
                         method: 'POST',
                         body: formData
                     });
