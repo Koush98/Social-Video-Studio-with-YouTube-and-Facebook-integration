@@ -247,10 +247,15 @@ def login(request: Request):
             ]
         }
     
+    # Debug: Show what redirect URI is being used
+    redirect_uri = f"{APP_URL}/callback"
+    print(f"DEBUG: APP_URL = {APP_URL}")
+    print(f"DEBUG: Redirect URI = {redirect_uri}")
+    
     flow = Flow.from_client_secrets_file(
         CLIENT_SECRETS_FILE,
         scopes=["https://www.googleapis.com/auth/youtube.upload"],
-        redirect_uri=f"{APP_URL}/callback"
+        redirect_uri=redirect_uri
     )
     auth_url, state = flow.authorization_url(
         prompt="consent",
